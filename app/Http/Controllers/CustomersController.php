@@ -65,17 +65,23 @@ class CustomersController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     *  Display a listing of the resource.
+     *  Search for a customer from previous orders.
+     * 
+     *  @param \Illuminate\Http\Request  $request
+     *  @return \Illuminate\Http\Response
      */
-    public function previous()
+    public function searchOrders(Request $request) 
     {
-        $orders = Order::orderBy('created_at', 'desc')->paginate(10)->onEachSide(1);
+        $search = $request['search'];
 
-        return view('customers.previous', [
-            'orders' => $orders,
-        ]);
+        if ($request->has('search')) {
+            $orders = Order::search($search)->orderBy('created_at', 'desc')->paginate(10)->onEachSide(1);
+        } else {
+            $orders = Order::orderBy('created_at', 'desc')->paginate(10)->onEachSide(1);
+        }
+
+        return view('customers.previous')->with('orders', $orders);
     }
 
     /**

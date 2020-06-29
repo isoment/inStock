@@ -38,6 +38,18 @@
                     <div class="card-body">
 
                         <h3 class="mb-3 text-muted">Orders</h3>
+
+                        <form action="{{ url('/customers/previous') }}" method="GET">
+                            <div class="row mb-4">
+                                <div class="col-8 col-lg-10">
+                                    <input type="text" name="search" class="form-control" placeholder="Search by Name, Email or Address">
+                                </div>
+                                <div class="col-4 col-lg-2 text-center">
+                                    <button class="btn btn-success">Search</button>
+                                </div>
+                            </div>
+                        </form>
+                        
                         <div class="table-responsive-md">
                             <table class="table table-hover">
                                 <thead>

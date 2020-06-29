@@ -81,5 +81,7 @@
             @yield('content')
         </main>
     </div>
+
+    <script src="http://unpkg.com/turbolinks" data-turbolinks-suppress-warning></script>
 </body>
 </html>

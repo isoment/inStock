@@ -40,8 +40,8 @@ Route::middleware('auth')->group(function() {
     Route::put('/orders/{id}', 'OrdersController@update')->name('orders.update');
     Route::delete('orders/{id}', 'OrdersController@destroy')->name('orders.delete');
 
-    Route::get('/customers/previous', 'CustomersController@previous');
     Route::post('/customers/previous', 'CustomersController@previousStore');
+    Route::get('/customers/previous', 'CustomersController@searchOrders');
 
     Route::get('/customers', 'CustomersController@index')->name('customers.index');
     Route::get('/customers/create', 'CustomersController@create')->name('customers.create');
