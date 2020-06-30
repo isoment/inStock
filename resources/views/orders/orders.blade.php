@@ -28,8 +28,24 @@
                         @include('inc.messages')
                         <br>
 
-                        <a href="/orders/create" 
-                           class="btn btn-success mb-3 float-right">Manual Order</a>
+                        <div class="d-flex justify-content-between">
+                            <h3 class="text-muted">Orders</h3>
+                            <a href="/orders/create" 
+                               class="btn btn-success mb-3 float-right">New Order</a>
+                        </div>
+
+                        <div>
+                            <form action="/orders" method="GET">
+                                <div class="row mb-4">
+                                    <div class="col-8 col-lg-10">
+                                        <input type="text" name="searchOrders" class="form-control" placeholder="Search Orders">
+                                    </div>
+                                    <div class="col-4 col-lg-2">
+                                        <button class="btn btn-secondary float-right">Search</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                         
                         <div class="table-responsive-md">
                             <table class="table table-hover">

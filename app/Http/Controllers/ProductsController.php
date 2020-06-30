@@ -14,20 +14,26 @@ class ProductsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::orderBy('created_at', 'desc')->paginate(10)->onEachSide(1);
+        // $products = Product::orderBy('created_at', 'desc')->paginate(10)->onEachSide(1);
 
         // Number of products
         $totalProducts = count(Product::get());
 
-        // Total product worth
-        // $resultWorth = DB::select("SELECT SUM(price) AS totalsum FROM products");
-        // $productWorth = number_format($resultWorth[0]->totalsum, 2);
-
         // Total Inventory
         $inventory = DB::select("SELECT SUM(inventory) AS totalsum FROM products");
         $inventory = number_format($inventory[0]->totalsum);
+
+        // Products search
+        $search = $request['searchProducts'];
+
+        if ($request->has('searchProducts')) {
+            $products = Product::search($search)->orderBy('created_at', 'desc')->
+                                 paginate(10)->onEachSide(1);
+        } else {
+            $products = Product::orderBy('created_at', 'desc')->paginate(10)->onEachSide(1);
+        }
 
         return view('products.products', [
             'products' => $products,

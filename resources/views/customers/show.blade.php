@@ -25,6 +25,7 @@
                             <h5 class="mb-3"><span class="font-weight-bold mr-2">Customer Name:</span>{{$customer->customer_name}}</h5>
                             <h5 class="mb-3"><span class="font-weight-bold mr-2">Address:</span>{{$customer->address}}</h5>
                             <h5 class="mb-3"><span class="font-weight-bold mr-2">Phone:</span>{{$customer->phone_number}}</h5>
+                            <h5 class="mb-3"><span class="font-weight-bold mr-2">Email:</span>{{$customer->email}}</h5>
                             <h5 class="mb-3"><span class="font-weight-bold mr-2">Contact Preference:</span>{{$customer->contact_method}}</h5>
                         </div>
                     </div>

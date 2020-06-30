@@ -14,6 +14,9 @@ class Order extends Model
             'orders.customer_name' => 10,
             'orders.email' => 10,
             'orders.address' => 10,
+            'orders.tracking' =>10,
+            'orders.status' => 10,
+            'orders.product_name' => 10,
         ]
     ];
 

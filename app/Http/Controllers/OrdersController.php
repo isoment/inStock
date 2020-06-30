@@ -14,14 +14,21 @@ class OrdersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $orders = Order::orderBy('created_at', 'desc')->paginate(10)->onEachSide(1);
-
         $orderCount = count(Order::get());
 
         $revenue = DB::select("SELECT SUM(item_cost) AS totalsum FROM orders");
         $revenue = number_format($revenue[0]->totalsum, 2);
+
+        $search = $request['searchOrders'];
+
+        if ($request->has('searchOrders')) {
+            $orders = Order::search($search)->orderBy('created_at', 'desc')->
+                             paginate(10)->onEachSide(1);
+        } else {
+            $orders = Order::orderBy('created_at', 'desc')->paginate(10)->onEachSide(1);
+        }
 
         return view('orders.orders', [
             'orders' => $orders,

@@ -13,12 +13,21 @@ class CustomersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $customers = Customer::orderBy('created_at', 'desc')->paginate(10);
+        // $customers = Customer::orderBy('created_at', 'desc')->paginate(10);
 
         $totalCustomers = Customer::get();
 
+        $search = $request['searchCustomers'];
+
+        if ($request->has('searchCustomers')) {
+            $customers = Customer::search($search)->orderBy('created_at', 'desc')->
+                                   paginate(10)->onEachSide(1);
+        } else {
+            $customers = Customer::orderBy('created_at', 'desc')->
+                                   paginate(10)->onEachSide(1);
+        }
 
         return view('customers.customers', [
             'customers' => $customers,

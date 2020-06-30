@@ -28,9 +28,26 @@
                         @include('inc.messages')
                         <br>
 
-                        <a href="{{ route('products.create') }}" 
-                           class="btn btn-success mb-3 float-right">New Product</a>
-                        
+                        <div class="d-flex justify-content-between">
+                            <h3 class="text-muted">Products</h3>
+
+                            <a href="{{ route('products.create') }}" 
+                               class="btn btn-success mb-3 float-right">New Product</a>
+                        </div>
+
+                        <div>
+                            <form action="/products" method="GET">
+                                <div class="row mb-4">
+                                    <div class="col-8 col-lg-10">
+                                        <input type="text" name="searchProducts" class="form-control" placeholder="Search by Name, Type or Brand">
+                                    </div>
+                                    <div class="col-4 col-lg-2">
+                                        <button class="btn btn-secondary float-right">Search</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
                         <div class="table-responsive-md">
                             <table class="table table-hover">
                                 <thead>

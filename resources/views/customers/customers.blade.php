@@ -28,11 +28,26 @@
                         @include('inc.messages')
                         <br>
 
+                        <h3 class="text-muted mb-4">Customers</h3>
+
                         <div class="d-flex flex-column flex-md-row justify-content-md-between">
                             <a href="/customers/previous" 
-                            class="mb-3 btn btn-info text-white">Create From Previous Order</a>
+                            class="mb-3 btn btn-primary">Create From Previous Order</a>
                             <a href="/customers/create" 
                             class="btn btn-success mb-3">Create Customer</a>
+                        </div>
+
+                        <div>
+                            <form action="/customers" method="GET">
+                                <div class="row mb-4">
+                                    <div class="col-8 col-lg-10">
+                                        <input type="text" name="searchCustomers" class="form-control" placeholder="Search Customers">
+                                    </div>
+                                    <div class="col-4 col-lg-2">
+                                        <button class="btn btn-secondary float-right">Search</button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
 
                         
