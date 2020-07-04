@@ -11,12 +11,11 @@ class Order extends Model
 
     protected $searchable = [
         'columns' => [
-            'orders.customer_name' => 10,
-            'orders.email' => 10,
-            'orders.address' => 10,
+            'orders.ship_to' => 10,
+            'orders.ship_address' => 10,
             'orders.tracking' =>10,
             'orders.status' => 10,
-            'orders.product_name' => 10,
+            'orders.shipper' => 10,
         ]
     ];
 
@@ -25,8 +24,13 @@ class Order extends Model
         'item_cost', 'tax', 'shipping', 'total_price', 'paid'
     ];
 
-    public function products() 
+    public function details() 
     {
-        return $this->belongsTo(Product::class, 'product_id');
+        return $this->hasMany(OrderDetail::class);
+    }
+
+    public function customers()
+    {
+        return $this->belongsTo(Customer::class, 'customer_id');
     }
 }

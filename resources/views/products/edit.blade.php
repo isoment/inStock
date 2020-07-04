@@ -12,30 +12,6 @@
                                 @csrf
                                 @method('PUT')
 
-                                @error('name')
-                                    <div class="alert alert-danger my-1">{{$message}}</div>
-                                @enderror
-                                <div class="form-group">
-                                    <label for="name" class="font-weight-light">Name</label>
-                                    <input type="text" class="form-control" id="name" name="name" value="{{$product->name}}">
-                                </div>
-
-                                @error('type')
-                                    <div class="alert alert-danger my-1">{{$message}}</div>
-                                @enderror
-                                <div class="form-group">
-                                    <label for="type" class="font-weight-light">Type</label>
-                                    <input type="text" class="form-control" id="type" name="type" value="{{$product->type}}">
-                                </div>
-
-                                @error('brand')
-                                    <div class="alert alert-danger my-1">{{$message}}</div>
-                                @enderror
-                                <div class="form-group">
-                                    <label for="brand" class="font-weight-light">Brand</label>
-                                    <input type="text" class="form-control" id="brand" name="brand" value="{{$product->brand}}">
-                                </div>
-
                                 @error('inventory')
                                     <div class="alert alert-danger my-1">{{$message}}</div>
                                 @enderror

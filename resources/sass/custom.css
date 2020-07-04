@@ -1,0 +1,24 @@
+@import url("https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Balsamiq+Sans&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;700&display=swap");
+body {
+  font-family: 'Ubuntu', sans-serif;
+}
+
+.remove-link-styling {
+  text-decoration: none !important;
+}
+
+@media (max-width: 992px) {
+  #product-worth-h1,
+  #product-numbers-h1 {
+    font-size: 1.1rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1400px;
+  }
+}
+/*# sourceMappingURL=custom.css.map */

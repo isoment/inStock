@@ -39,9 +39,8 @@ Route::middleware('auth')->group(function() {
     Route::get('/orders/{id}/edit', 'OrdersController@edit')->name('orders.edit');
     Route::put('/orders/{id}', 'OrdersController@update')->name('orders.update');
     Route::delete('orders/{id}', 'OrdersController@destroy')->name('orders.delete');
-
-    Route::post('/customers/previous', 'CustomersController@previousStore');
-    Route::get('/customers/previous', 'CustomersController@searchOrders');
+    Route::post('orders/{id}/items', 'OrdersController@addItems');
+    Route::delete('orders/{id}/items', 'OrdersController@removeItems');
 
     Route::get('/customers', 'CustomersController@index')->name('customers.index');
     Route::get('/customers/create', 'CustomersController@create')->name('customers.create');

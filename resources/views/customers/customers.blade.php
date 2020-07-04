@@ -14,8 +14,8 @@
             <div class="col-5 col-md-4">
                 <div class="card shadow-sm">
                     <div class="card-body text-center">
-                        <h1 id="product-worth-h1" class="font-weight-bold text-info">0</h1>
-                        TEXT
+                        <h1 id="product-worth-h1" class="font-weight-bold text-info">{{number_format($avgOrdersPerCustomer, 2)}}</h1>
+                        Avg Orders / Customer
                     </div>
                 </div>
             </div>
@@ -28,11 +28,8 @@
                         @include('inc.messages')
                         <br>
 
-                        <h3 class="text-muted mb-4">Customers</h3>
-
-                        <div class="d-flex flex-column flex-md-row justify-content-md-between">
-                            <a href="/customers/previous" 
-                            class="mb-3 btn btn-primary">Create From Previous Order</a>
+                        <div class="d-flex justify-content-between">
+                            <h3 class="text-muted mb-4">Customers</h3>
                             <a href="/customers/create" 
                             class="btn btn-success mb-3">Create Customer</a>
                         </div>

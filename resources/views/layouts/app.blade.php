@@ -82,6 +82,6 @@
         </main>
     </div>
 
-    <script src="http://unpkg.com/turbolinks" data-turbolinks-suppress-warning></script>
+    {{-- <script src="http://unpkg.com/turbolinks" data-turbolinks-suppress-warning></script> --}}
 </body>
 </html>

@@ -21,8 +21,8 @@ class Product extends Model
         'name', 'type', 'brand', 'price', 'description'
     ];
 
-    public function orders() 
-    {
-        return $this->hasMany(Order::class);
-    }
+    // public function details() 
+    // {
+    //     return $this->belongsTo(OrderDetail::class, 'product_id');
+    // }
 }

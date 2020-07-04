@@ -15,9 +15,8 @@ class CustomersController extends Controller
      */
     public function index(Request $request)
     {
-        // $customers = Customer::orderBy('created_at', 'desc')->paginate(10);
-
-        $totalCustomers = Customer::get();
+        $totalCustomers = count(Customer::get());
+        $totalOrders = count(Order::get());
 
         $search = $request['searchCustomers'];
 
@@ -29,9 +28,12 @@ class CustomersController extends Controller
                                    paginate(10)->onEachSide(1);
         }
 
+        $avgOrderPerCustomer = $totalOrders / $totalCustomers;
+
         return view('customers.customers', [
             'customers' => $customers,
-            'totalCustomers' => count($totalCustomers),
+            'totalCustomers' => $totalCustomers,
+            'avgOrdersPerCustomer' => $avgOrderPerCustomer,
         ]);
     }
 
@@ -73,50 +75,6 @@ class CustomersController extends Controller
 
     }
 
-    /**
-     *  Display a listing of the resource.
-     *  Search for a customer from previous orders.
-     * 
-     *  @param \Illuminate\Http\Request  $request
-     *  @return \Illuminate\Http\Response
-     */
-    public function searchOrders(Request $request) 
-    {
-        $search = $request['search'];
-
-        if ($request->has('search')) {
-            $orders = Order::search($search)->orderBy('created_at', 'desc')->paginate(10)->onEachSide(1);
-        } else {
-            $orders = Order::orderBy('created_at', 'desc')->paginate(10)->onEachSide(1);
-        }
-
-        return view('customers.previous')->with('orders', $orders);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function previousStore(Request $request)
-    {
-        $this->validate($request, [
-            'previous_order' => 'required'
-        ]);
-
-        $previousOrder = Order::findOrFail($request['previous_order']);
-        
-        $customer = new Customer;
-        $customer->customer_name = $previousOrder->customer_name;
-        $customer->email = $previousOrder->email;
-        $customer->address = $previousOrder->address;
-        $customer->save();
-
-        return redirect('/customers')->with('success', 'Customer Added');
-
-    }
-    
     /**
      * Display the specified resource.
      *

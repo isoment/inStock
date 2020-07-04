@@ -16,8 +16,6 @@ class ProductsController extends Controller
      */
     public function index(Request $request)
     {
-        // $products = Product::orderBy('created_at', 'desc')->paginate(10)->onEachSide(1);
-
         // Number of products
         $totalProducts = count(Product::get());
 
@@ -92,12 +90,12 @@ class ProductsController extends Controller
         $product = Product::findOrFail($id);
 
         // Finding orders of this product
-        $ordersWithProduct = Order::orderBy('created_at', 'desc')->
-                                    where('product_id', $product->id)->paginate(10);
+        // $ordersWithProduct = Order::orderBy('created_at', 'desc')->
+        //                             where('product_id', $product->id)->paginate(10);
 
         return view('products.show', [
             'product' => $product,
-            'ordersWithProduct' => $ordersWithProduct,
+            // 'ordersWithProduct' => $ordersWithProduct,
         ]);
     }
 
@@ -124,18 +122,12 @@ class ProductsController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'name' => 'required',
-            'type' => 'required',
-            'brand' => 'required',
             'inventory' => 'required|integer',
             'price' => 'required|numeric',
             'description' => 'required'
         ]);
 
         $product = Product::findOrFail($id);
-        $product->name = $request->input('name');
-        $product->type = $request->input('type');
-        $product->brand = $request->input('brand');
         $product->inventory = $request->input('inventory');
         $product->price = $request->input('price');
         $product->description = $request->input('description');
@@ -144,18 +136,4 @@ class ProductsController extends Controller
         return redirect('/products')->with('success', 'Product Updated');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        $product = Product::findOrFail($id);
-
-        $product->delete();
-
-        return redirect('/products')->with('success', 'Product Deleted');
-    }
 }

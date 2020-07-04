@@ -7,18 +7,8 @@
                 <h1 class="mb-4">{{$product->name}}</h1>
                 <div class="card shadow-sm">
                     <div class="card-body m-3">
-                        <div class="float-right d-flex">
+                        <div class="float-right">
                             <a href="/products/{{$product->id}}/edit" class="btn btn-primary mr-2">Edit</a>
-                            {{-- <a href="#" class="btn btn-danger">Delete</a> --}}
-                            <div>
-                                <form action="/products/{{$product->id}}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" 
-                                            class="btn btn-danger" 
-                                            onclick="return confirm('Delete Product?')">Delete</button>
-                                </form>
-                            </div>
                         </div>
                         <div class="details">
                             <h5 class="mb-3"><span class="font-weight-bold mr-2">Name:</span>{{$product->name}}</h5>
@@ -47,7 +37,7 @@
                                 </thead>
                                 <tbody>
                                     
-                                    @foreach ($ordersWithProduct as $order)
+                                    {{-- @foreach ($ordersWithProduct as $order)
                                     <tr>
                                         <th scope="row">{{$order->id}}</th>
                                         <td>{{$order->status}}</td>
@@ -59,13 +49,13 @@
                                             <a href="/orders/{{$order->id}}" class="btn-sm btn-primary remove-link-styling">View</a>
                                         </td>
                                     </tr>    
-                                    @endforeach
+                                    @endforeach --}}
 
                                 </tbody>
                             </table>
-                            <div>
+                            {{-- <div>
                                 {{ $ordersWithProduct->links() }}
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>

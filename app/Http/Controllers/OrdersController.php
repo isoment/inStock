@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Customer;
 use App\Order;
+use App\OrderDetail;
 use App\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -18,7 +20,7 @@ class OrdersController extends Controller
     {
         $orderCount = count(Order::get());
 
-        $revenue = DB::select("SELECT SUM(item_cost) AS totalsum FROM orders");
+        $revenue = DB::select("SELECT SUM(order_subtotal) AS totalsum FROM orders");
         $revenue = number_format($revenue[0]->totalsum, 2);
 
         $search = $request['searchOrders'];
@@ -40,14 +42,23 @@ class OrdersController extends Controller
     /**
      * Show the form for creating a new resource.
      *
+     * @param \Illuminate\Http\Request
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        $products = Product::get();
+        $search = $request['searchCustomers'];
+
+        if ($request->has('searchCustomers')) {
+            $customers = Customer::search($search)->orderBy('created_at', 'desc')->
+                                   paginate(10)->onEachSide(1);
+        } else {
+            $customers = Customer::orderBy('created_at', 'desc')->
+                                   paginate(10)->onEachSide(1);
+        }
 
         return view('orders.create', [
-            'products' => $products,
+            'customers' => $customers,
         ]);
     }
 
@@ -60,37 +71,18 @@ class OrdersController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'product' => 'required',
-            'customer_name' => 'required',
-            'email' => 'required',
-            'address' => 'required',
-            'tax' => 'required|numeric',
-            'shipping' => 'required|numeric',
-            'status' => 'required',
-            'paid' => 'required'
+            'customer_id' => 'required|numeric',
+            'ship_to' => 'required',
+            'ship_address' => 'required',
         ]);
 
-        // Finding product name and price...
-        $product = Product::find($request['product']);
-        $itemCost = $product->price;
-        $productName = $product->name;
-
         $order = new Order;
-        $order->product_id = $request['product'];
-        $order->product_name = $productName;
-        $order->status = $request['status'];
-        $order->tracking = $request['tracking'];
-        $order->customer_name = $request['customer_name'];
-        $order->email = $request['email'];
-        $order->address = $request['address'];
-        $order->item_cost = $itemCost;
-        $order->tax = $request['tax'];
-        $order->shipping = $request['shipping'];
-        $order->paid = $request['paid'];
-        $order->total_price = $itemCost + $request['tax'] + $request['shipping'];
+        $order->customer_id = $request['customer_id'];
+        $order->ship_to = $request['ship_to'];
+        $order->ship_address = $request['ship_address'];
         $order->save();
 
-        return redirect('/orders')->with('success', 'Order Added');
+        return redirect('/orders/' . $order->id . '/edit')->with('success', 'Order Added');
     }
 
     /**
@@ -103,14 +95,14 @@ class OrdersController extends Controller
     {
         $order = Order::findOrFail($id);
 
-        $payment = Order::findOrFail($id);
-        $productCost = $order->item_cost;
-        $totalCost = number_format($productCost + $payment->tax + $payment->shipping, 2);
+        $subTotal = $order->order_subtotal;
+
+        $total = $subTotal + $order->tax + $order->shipping;
 
         return view('orders.show', [
             'order' => $order,
-            'productCost' => $productCost,
-            'totalCost' => $totalCost,
+            'subTotal' => number_format($subTotal, 2),
+            'total' => number_format($total, 2),
         ]);
     }
 
@@ -120,15 +112,91 @@ class OrdersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
-        $order = Order::findOrFail($id);
-        $products = Product::get();
+        $search = $request['searchProducts'];
 
+        if ($request->has('searchProducts')) {
+            $products = Product::search($search)->orderBy('created_at', 'desc')->
+                                 paginate(10)->onEachSide(1);
+        } else {
+            $products = Product::orderBy('created_at', 'desc')->paginate(10)->onEachSide(1);
+        }
+
+        $order = Order::findOrFail($id);
+
+        $orderDetails = OrderDetail::where('order_id', $order->id)->get();
+
+        // Getting item subtotal
+        $calculations = OrderDetail::where('order_id', $order->id)->
+                                     get(['quantity', 'unit_cost'])->toArray();
+
+        $itemsTotal = array();
+
+        foreach ($calculations as $calculation) {
+            $itemsTotal[] = $calculation['quantity'] * $calculation['unit_cost'];
+        }
+
+        if ($itemsTotal) {
+            $orderSubTotal = array_sum($itemsTotal);
+        } else {
+            $orderSubTotal = "0";
+        }
+          
         return view('orders.edit', [
             'order' => $order,
             'products' => $products,
+            'orderDetails' => $orderDetails,
+            'orderSubTotal' => $orderSubTotal,
         ]);
+    }
+
+    public function addItems(Request $request, $id) 
+    {
+        $this->validate($request, [
+            'quantity' => 'required',
+            'product' => 'required',
+        ]);
+
+        $order = Order::findOrFail($id);
+
+        $product = Product::findOrFail($request['product']);
+        $productID = $product->id;
+
+        if (OrderDetail::where('product_id', $request['product'])->
+                         where('order_id', $order->id)->first()) {
+            return redirect('/orders/' . $order->id . '/edit')->
+                   with('danger', 'Product already added');
+        } else {
+            $orderDetail = new OrderDetail;
+            $orderDetail->order_id = $order->id;
+            $orderDetail->product_id = $productID;
+            $orderDetail->quantity = $request['quantity'];
+            $orderDetail->unit_cost = $product->price;
+            $orderDetail->save();
+
+            return redirect('/orders/' . $order->id . '/edit')->
+                   with('success', 'Product added');
+        }
+    }
+
+    public function removeItems(Request $request, $id) 
+    {
+
+        $this->validate($request, [
+            'product' => 'required',
+        ]);
+
+        $order = Order::findOrFail($id);
+
+        $orderDetail = OrderDetail::where('product_id', $request['product'])->
+                                    where('order_id', $order->id)->first();
+
+        if ($orderDetail) {
+            $orderDetail->delete();
+            return redirect('/orders/' . $id . '/edit')->with('success', 'Items removed');
+        }
+        return redirect('/orders/' . $id . '/edit')->with('danger', 'No items to remove');
     }
 
     /**
@@ -140,39 +208,29 @@ class OrdersController extends Controller
      */
     public function update(Request $request, $id)
     {
-
         $this->validate($request, [
-            'product' => 'required',
             'status' => 'required',
-            'customer_name' => 'required',
-            'email' => 'required',
-            'address' => 'required',
-            'tax' => 'required|numeric',
-            'shipping' => 'required|numeric',
-            'paid' => 'required'
+            'tracking' => 'required',
+            'shipper' => 'required',
+            'ship_to' => 'required',
+            'ship_address' => 'required',
+            'tax' => 'numeric|nullable',
+            'shipping' => 'numeric|nullable',
+            'order_subtotal' => 'numeric',
         ]);
 
-            // Finding product name and price...
-            $product = Product::find($request['product']);
-            $itemCost = $product->price;
-            $productName = $product->name;
+        $order = Order::findOrFail($id);
+        $order->status = $request['status'];
+        $order->tracking = $request['tracking'];
+        $order->shipper = $request['shipper'];
+        $order->ship_to = $request['ship_to'];
+        $order->ship_address = $request['ship_address'];
+        $order->tax = $request['tax'];
+        $order->shipping = $request['shipping'];
+        $order->order_subtotal = $request['order_subtotal'];
+        $order->save();
     
-            $order = Order::findOrFail($id);
-            $order->product_id = $request['product'];
-            $order->product_name = $productName;
-            $order->status = $request['status'];
-            $order->tracking = $request['tracking'];
-            $order->customer_name = $request['customer_name'];
-            $order->email = $request['email'];
-            $order->address = $request['address'];
-            $order->item_cost = $itemCost;
-            $order->tax = $request['tax'];
-            $order->shipping = $request['shipping'];
-            $order->paid = $request['paid'];
-            $order->total_price = $itemCost + $request['tax'] + $request['shipping'];
-            $order->save();
-    
-            return redirect('/orders')->with('success', 'Order Updated');
+        return redirect('/orders')->with('success', 'Order Updated');
     }
 
     /**
