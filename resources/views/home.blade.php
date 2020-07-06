@@ -22,10 +22,9 @@
         </div>
     </div>
 
-    <div class="row justify-content-center">
+    <div class="row mb-4 justify-content-center">
         <div class="col-md-8">
             <div class="card shadow-sm">
-
                 <div class="card-body">
                     <div class="order-recent">
                         <h3 class="text-muted">Recent Orders</h3>
@@ -60,9 +59,25 @@
                             </table>
                         </div>
                     </div>
-
                 </div>
+            </div>
+        </div>
+    </div>
 
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="revenue-by-day">
+                        <h3 class="text-muted">Revenue By Day for {{date('F')}}</h3>
+                        <p class="text-muted">Last 7 days, in dollars</p>
+                        <div class="graph-revenue">
+                            <revenue-graph :keys="{{ $monthName }}"
+                                           :values="{{ $dollars }}">
+                            </revenue-graph>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
