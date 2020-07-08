@@ -64,7 +64,7 @@ class HomeController extends Controller
         $values = array_values($occurences);
         // Get customer names and combine with occurences array
         $customers = Customer::orderBy('id')->pluck('customer_name')->toArray();
-
+        // Make sure arrays are same size
         if (sizeof($customers) === sizeof($values)) {
             $combine = array_combine($customers, $values);
             // Sort array highest first
@@ -79,9 +79,8 @@ class HomeController extends Controller
             $customerOrderCount = NULL;
         }
 
-
-
-        
+        // Get 5 newest customers
+        $newestCustomers = Customer::take(5)->orderBy('created_at', 'desc')->get();
 
         return view('home', [
             'orders' => $orders,
@@ -92,6 +91,7 @@ class HomeController extends Controller
             'products' => $products,
             'customerName' => $customerName,
             'customerOrderCount' => $customerOrderCount,
+            'newestCustomers' => $newestCustomers,
         ]);
     }
 }

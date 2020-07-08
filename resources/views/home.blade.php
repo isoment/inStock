@@ -151,6 +151,48 @@
         </div>
     </div>
 
+    <div class="row mb-4 justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="order-recent">
+                        <h3 class="text-muted">Newest Customers</h3>
+                        <div class="table-responsive-md">
+                            <table class="table table-hover">
+                                <thead>
+                                  <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Address</th>
+                                    <th scope="col">Phone</th>
+                                    <th scope="col"></th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                    @foreach ($newestCustomers as $cust)
+                                    <tr>
+                                        <th scope="row">{{$cust->id}}</th>
+                                        <td>{{$cust->customer_name}}</td>
+                                        <td>{{$cust->email}}</td>
+                                        <td>{{$cust->address}}</td>
+                                        <td>{{$cust->phone_number}}</td>
+                                        <td class="text-center">
+                                            <a href="/customers/{{$cust->id}}" class="btn-sm btn-primary remove-link-styling">View</a>
+                                        </td>
+                                    </tr>    
+                                    @endforeach
+    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 
