@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Customer;
 use App\Order;
+use App\Product;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -26,10 +28,16 @@ class HomeController extends Controller
      */
     public function index()
     {
+        // Last 5 orders
+        $orders = Order::take(5)->orderBy('created_at', 'desc')->get();
+        // Order Total
+        $totalOrders = count(Order::get());
+        // Revenue
         $revenue = DB::select("SELECT SUM(order_subtotal) AS totalsum FROM orders");
         $revenue = number_format($revenue[0]->totalsum, 2);
-        $totalOrders = count(Order::get());
-        $orders = Order::take(5)->orderBy('created_at', 'desc')->get();
+        // Products
+        $products = Product::take(5)->orderBy('inventory')->get();
+
 
         // Graphing this months revenue by day...
         // We first get the created_at dates starting at the first of this month
@@ -38,7 +46,6 @@ class HomeController extends Controller
                        selectRaw('DAY(created_at) as day, SUM(order_subtotal) as revenue')->
                        groupBy('day')->
                        pluck('revenue', 'day');
-
         // Getting the days and adding numeric month
         $day = $revenueByDay->keys();
         $withMonthName = array();
@@ -46,16 +53,45 @@ class HomeController extends Controller
             $withMonthName[] = date('n') . '/' . $value;
         }
         $monthNameCollection = collect($withMonthName);
-
         // Values and adding currency and formatting
         $dollars = $revenueByDay->values();
+
+
+        // Getting the customer ID and order count in array for Customers Graph
+        $idFromOrder = Order::orderBy('customer_id')->pluck('customer_id')->toArray();
+        $occurences = array_count_values($idFromOrder);
+        // New array with occurence values
+        $values = array_values($occurences);
+        // Get customer names and combine with occurences array
+        $customers = Customer::orderBy('id')->pluck('customer_name')->toArray();
+
+        if (sizeof($customers) === sizeof($values)) {
+            $combine = array_combine($customers, $values);
+            // Sort array highest first
+            arsort($combine);
+            // Get only the top 5 customers
+            $toCustomers = array_slice($combine, 0, 5);
+            // Two seperate arrays for customer graph keys and values
+            $customerName = collect(array_keys($toCustomers));
+            $customerOrderCount = collect(array_values($toCustomers));
+        } else {
+            $customerName = NULL;
+            $customerOrderCount = NULL;
+        }
+
+
+
+        
 
         return view('home', [
             'orders' => $orders,
             'totalOrders' => $totalOrders,
             'revenue' => $revenue,
-            'monthName' => $monthNameCollection,
+            'days' => $monthNameCollection,
             'dollars' => $dollars,
+            'products' => $products,
+            'customerName' => $customerName,
+            'customerOrderCount' => $customerOrderCount,
         ]);
     }
 }

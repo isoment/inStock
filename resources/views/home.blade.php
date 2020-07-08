@@ -27,7 +27,10 @@
             <div class="card shadow-sm">
                 <div class="card-body">
                     <div class="order-recent">
-                        <h3 class="text-muted">Recent Orders</h3>
+                        <div class="d-flex justify-content-between mb-2">
+                            <h3 class="text-muted mb-0 mt-1">Recent Orders</h3>
+                            <a class="btn btn-primary" href="/orders">View All</a>
+                        </div>
                         <div class="table-responsive-md">
                             <table class="table table-hover">
                                 <thead>
@@ -64,7 +67,7 @@
         </div>
     </div>
 
-    <div class="row justify-content-center">
+    <div class="row mb-4 justify-content-center">
         <div class="col-md-8">
             <div class="card shadow-sm">
                 <div class="card-body">
@@ -72,8 +75,8 @@
                         <h3 class="text-muted">Revenue By Day for {{date('F')}}</h3>
                         <p class="text-muted">Last 7 days, in dollars</p>
                         <div class="graph-revenue">
-                            <revenue-graph :keys="{{ $monthName }}"
-                                           :values="{{ $dollars }}">
+                            <revenue-graph :keys="{{$days}}"
+                                           :values="{{$dollars}}">
                             </revenue-graph>
                         </div>
                     </div>
@@ -81,5 +84,74 @@
             </div>
         </div>
     </div>
+
+    <div class="row mb-4 justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="order-recent">
+                        <h3 class="text-muted">Lowest Stock Products</h3>
+                        <div class="table-responsive-md">
+                            <table class="table table-hover">
+                                <thead>
+                                  <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Type</th>
+                                    <th scope="col">Brand</th>
+                                    <th scope="col">Inventory</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col"></th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                    @foreach ($products as $product)
+                                    <tr class="{{$product->inventory < 5 ? "text-danger" : ""}}">
+                                        <th scope="row">{{$product->id}}</th>
+                                        <td>{{$product->name}}</td>
+                                        <td>{{$product->type}}</td>
+                                        <td>{{$product->brand}}</td>
+                                        <td>{{$product->inventory}}</td>
+                                        <td>${{$product->price}}</td>
+                                        <td class="text-center">
+                                            <a href="/orders/{{$product->id}}" class="btn-sm btn-primary remove-link-styling">View</a>
+                                        </td>
+                                    </tr>    
+                                    @endforeach
+    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4 justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="revenue-by-day">
+                        <h3 class="text-muted">Top Five Customers</h3>
+                        <p class="text-muted">By order volume</p>
+                        <div class="graph-revenue">
+                            @if ($customerName && $customerOrderCount)
+                                <customer-graph :keys="{{$customerName}}"
+                                                :values="{{$customerOrderCount}}">
+                                </customer-graph>
+                            @else
+                                <h4 class="text-center text-danger">Metric will update once all customers are assigned orders</h4>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
+
+
 @endsection

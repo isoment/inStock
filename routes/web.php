@@ -30,7 +30,6 @@ Route::middleware('auth')->group(function() {
     Route::get('/products/{id}', 'ProductsController@show')->name('products.show');
     Route::get('/products/{id}/edit', 'ProductsController@edit')->name('products.edit');
     Route::put('/products/{id}', 'ProductsController@update')->name('products.update');
-    Route::delete('/products/{id}', 'ProductsController@destroy')->name('products.delete');
 
     Route::get('/orders', 'OrdersController@index')->name('orders.index');
     Route::get('/orders/create', 'OrdersController@create')->name('orders.create');
@@ -38,7 +37,7 @@ Route::middleware('auth')->group(function() {
     Route::get('/orders/{id}', 'OrdersController@show')->name('orders.show');
     Route::get('/orders/{id}/edit', 'OrdersController@edit')->name('orders.edit');
     Route::put('/orders/{id}', 'OrdersController@update')->name('orders.update');
-    Route::delete('orders/{id}', 'OrdersController@destroy')->name('orders.delete');
+    // Route::delete('orders/{id}', 'OrdersController@destroy')->name('orders.delete');
     Route::post('orders/{id}/items', 'OrdersController@addItems');
     Route::delete('orders/{id}/items', 'OrdersController@removeItems');
 

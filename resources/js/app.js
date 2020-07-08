@@ -22,6 +22,7 @@ window.Vue = require('vue');
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('revenue-graph', require('./components/RevenueGraph.vue').default);
+Vue.component('customer-graph', require('./components/CustomerGraph.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

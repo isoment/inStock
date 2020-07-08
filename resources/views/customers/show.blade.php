@@ -10,13 +10,13 @@
                         <div class="float-right d-flex">
                             <a href="/customers/{{$customer->id}}/edit" class="btn btn-primary mr-2">Edit</a>
                             <div>
-                                <form action="/customers/{{$customer->id}}" method="POST">
+                                {{-- <form action="/customers/{{$customer->id}}" method="POST">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" 
                                             class="btn btn-danger" 
                                             onclick="return confirm('Delete Customer?')">Delete</button>
-                                </form>
+                                </form> --}}
                             </div>
                         </div>
                         <h4 class="font-weight-bold mb-3 text-muted">Customer Information</h4>

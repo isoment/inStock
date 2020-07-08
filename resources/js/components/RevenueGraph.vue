@@ -1,6 +1,6 @@
 <template>
     <div>
-        <canvas ref="graph"></canvas>
+        <canvas ref="orderGraph"></canvas>
     </div>
 </template>
 
@@ -10,7 +10,7 @@ export default {
     props: ['keys', 'values'],
 
     mounted() {
-        var context = this.$refs.graph.getContext('2d');
+        var context = this.$refs.orderGraph.getContext('2d');
         var revenueGraph = new Chart(context, {
             type: 'pie',
             data: {

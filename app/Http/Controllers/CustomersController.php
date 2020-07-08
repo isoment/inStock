@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Customer;
 use App\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CustomersController extends Controller
 {
@@ -29,6 +30,11 @@ class CustomersController extends Controller
         }
 
         $avgOrderPerCustomer = $totalOrders / $totalCustomers;
+
+        // $orderCount = DB::select('SELECT customer_id, COUNT(*) AS magnitude 
+        //                           FROM orders 
+        //                           GROUP BY customer_id 
+        //                           ORDER BY magnitude DESC');
 
         return view('customers.customers', [
             'customers' => $customers,
