@@ -29,8 +29,12 @@ class CustomersController extends Controller
                                    paginate(10)->onEachSide(1);
         }
 
-        $avgOrderPerCustomer = $totalOrders / $totalCustomers;
-
+        if ($totalCustomers === 0) {
+            $avgOrderPerCustomer = 0;
+        } else {
+            $avgOrderPerCustomer = $totalOrders / $totalCustomers;
+        }
+        
         // $orderCount = DB::select('SELECT customer_id, COUNT(*) AS magnitude 
         //                           FROM orders 
         //                           GROUP BY customer_id 
