@@ -18,7 +18,7 @@ class OrdersController extends Controller
      */
     public function index(Request $request)
     {
-        $orderCount = count(Order::get());
+        $orderCount = Order::count();
 
         $revenue = DB::select("SELECT SUM(order_subtotal) AS totalsum FROM orders");
         $revenue = number_format($revenue[0]->totalsum, 2);

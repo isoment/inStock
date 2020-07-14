@@ -17,7 +17,7 @@ class ProductsController extends Controller
     public function index(Request $request)
     {
         // Number of products
-        $totalProducts = count(Product::get());
+        $totalProducts = Product::count();
 
         // Total Inventory
         $inventory = DB::select("SELECT SUM(inventory) AS totalsum FROM products");

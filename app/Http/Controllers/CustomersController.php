@@ -16,8 +16,8 @@ class CustomersController extends Controller
      */
     public function index(Request $request)
     {
-        $totalCustomers = count(Customer::get());
-        $totalOrders = count(Order::get());
+        $totalCustomers = Customer::count();
+        $totalOrders = Order::count();
 
         $search = $request['searchCustomers'];
 

@@ -31,7 +31,7 @@ class HomeController extends Controller
         // Last 5 orders
         $orders = Order::take(5)->orderBy('created_at', 'desc')->get();
         // Order Total
-        $totalOrders = count(Order::get());
+        $totalOrders = Order::count();
         // Revenue
         $revenue = DB::select("SELECT SUM(order_subtotal) AS totalsum FROM orders");
         $revenue = number_format($revenue[0]->totalsum, 2);

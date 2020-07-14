@@ -48,7 +48,7 @@
                             </form>
                         </div>
 
-                        <div class="table-responsive-md">
+                        <div class="table-responsive-lg">
                             <table class="table table-hover">
                                 <thead>
                                   <tr>

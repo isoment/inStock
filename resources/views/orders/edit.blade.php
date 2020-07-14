@@ -26,7 +26,7 @@
                                     </div>
                                 </form>
                             </div>
-                            <div class="table-responsive-md">
+                            <div class="table-responsive-xl">
                                 <table class="table table-hover">
                                     <thead>
                                       <tr>
@@ -49,14 +49,14 @@
                                             <td>{{$product->brand}}</td>
                                             <td>{{$product->inventory}}</td>
                                             <td>${{$product->price}}</td>
-                                            <td class="text-center d-flex flex-column flex-lg-row">
+                                            <td class="text-center d-flex flex-column flex-xl-row">
                                                 <div>
                                                     <form action="/orders/{{$order->id}}/items" method="POST">
                                                         @csrf
-                                                        <div class="d-flex flex-column flex-lg-row">
+                                                        <div class="d-flex flex-column flex-xl-row">
                                                             <input type="number" name="quantity" class="form-control" placeholder="QTY">
                                                             <input type="hidden" name="product" value="{{$product->id}}">
-                                                            <button type="submit" class="btn btn-primary remove-link-styling mx-lg-2">Add</button>
+                                                            <button type="submit" class="btn btn-primary remove-link-styling mx-xl-2">Add</button>
                                                         </div>
                                                     </form>
                                                 </div>
@@ -119,12 +119,12 @@
                                 <div class="form-group">
                                     <label for="status" class="font-weight-light">Status</label>
                                     <select name="status" id="status" class="form-control">
-                                        <option value="" selected disabled hidden>--- Select ---</option>
-                                        <option value="Open">Open</option>
-                                        <option value="Paid">Paid</option>
-                                        <option value="Shipped">Shipped</option>
-                                        <option value="Refund">Refund</option>
-                                        <option value="Void">Void</option>
+                                        {{-- <option value="" selected disabled hidden>--- Select ---</option> --}}
+                                        <option value="Open" {{old('status', $order->status == 'Open' ? 'selected' : '')}}>Open</option>
+                                        <option value="Paid" {{old('status', $order->status == 'Paid' ? 'selected' : '')}}>Paid</option>
+                                        <option value="Shipped" {{old('status', $order->status == 'Shipped' ? 'selected' : '')}}>Shipped</option>
+                                        <option value="Refund" {{old('status', $order->status == 'Refund' ? 'selected' : '')}}>Refund</option>
+                                        <option value="Void" {{old('status', $order->status == 'Void' ? 'selected' : '')}}>Void</option>
                                     </select>
                                 </div>
 
@@ -133,7 +133,7 @@
                                 @enderror
                                 <div class="form-group">
                                     <label for="tracking" class="font-weight-light">Tracking</label>
-                                    <input type="text" class="form-control" id="tracking" name="tracking" value="{{$order->tracking}}">
+                                    <input type="text" class="form-control" id="tracking" name="tracking" value="{{old('tracking', $order->tracking)}}">
                                 </div>
 
                                 @error('shipper')
@@ -141,7 +141,7 @@
                                 @enderror
                                 <div class="form-group">
                                     <label for="shipper" class="font-weight-light">Shipper</label>
-                                    <input type="shipper" class="form-control" id="shipper" name="shipper" value="{{$order->shipper}}">
+                                    <input type="shipper" class="form-control" id="shipper" name="shipper" value="{{ old('shipper', $order->shipper)}}">
                                 </div>
 
                                 @error('ship_to')
